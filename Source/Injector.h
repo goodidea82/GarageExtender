@@ -635,11 +635,15 @@ namespace CWeather
 //==========================================================
 namespace CStreaming
 {
+	//Platinum Edit:
+	//const int MODELINFO_MAX = (int *)alloca(sizeof(int) * (*(int*)(0x5B8AFA + 2) - *(int*)(0x408ADA + 3)) / 0x14);
 	typedef SImgGTAItemInfo ModelInfo;
 
 	DeclareFunc(0x40EA10, char (*LoadAllRequestedModels)(bool OnlyPriorityModels));
 	DeclareFunc(0x4087E0, char (*RequestModel)(int model, int));
-	DeclareArray(0x8E4CC0, ModelInfo[25000], aInfoForModel);
+	//DeclareArray(0x8E4CC0, ModelInfo[25000], aInfoForModel);
+	//PlatinumEdit:
+	DeclareArray((0x408ADA + 3), ModelInfo[50000], aInfoForModel);
 };
 
 

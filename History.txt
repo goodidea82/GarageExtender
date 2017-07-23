@@ -7,3 +7,7 @@ v1.0 - Dec 2 2012
 v1.0.1 - Jan 20 2013
 	Fixed a bug that crashes your game when using the opcode 03AF
 
+v1.0.2 - July 17 2017
+    Fixed campatibility with Fastman92LimitAdjuster 4.2 by PlatinumSerb
+	Thanks for help from fastman92 and dkluin: http://gtaforums.com/topic/733982-fastman92-limit-adjuster/?p=1069698439
+	

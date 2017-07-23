@@ -910,8 +910,11 @@ void CCustomGarage::RestoreThisGarage()
 char CCustomGarage::IsVehicleAcceptByThisTunningGarage(CVehicle* veh)
 {
 	if(veh == nullptr) return 0;
+	//Platinum Edit:
 	unsigned long handling_flags =
-		*(DWORD*)( 0xD0 + ((0xC2B9C8 + 0x14) + ((*(WORD*)( *((DWORD*)0xA9B0C8 + veh->__parent.__parent.m_wModelIndex) + 0x4A )) * 0xE0)) );
+		*(DWORD*)( 0xD0 + ((0xC2B9C8 + 0x14) + ((*(WORD*)( *((DWORD*)ARRAY_ModelInfo + veh->__parent.__parent.m_wModelIndex) + 0x4A )) * 0xE0)) );
+		//*(DWORD*)(0xD0 + ((0xC2B9C8 + 0x14) + ((*(WORD*)(*((DWORD*)0xA9B0C8 + veh->__parent.__parent.m_wModelIndex) + 0x4A)) * 0xE0)));
+
 	switch(this->gType)
 	{
 		case IS_LOCO_LOW_CO:		return (handling_flags & 0x2000000)!=0;
@@ -1311,7 +1314,10 @@ void CCustomGarage::ProcessSprayGarage()
 				{
 					uint8_t c1, c2, c3, c4;
 					CVehicleModelInfo__ChooseVehicleColour(
-						*(DWORD*)(0xA9B0C8 + veh->__parent.__parent.m_wModelIndex*4), 0, &c1, &c2, &c3, &c4, 1);
+						//Platinum Edit:
+						*(DWORD*)(ARRAY_ModelInfo + veh->__parent.__parent.m_wModelIndex * 4), 0, &c1, &c2, &c3, &c4, 1);
+						//*(DWORD*)(0xA9B0C8 + veh->__parent.__parent.m_wModelIndex*4), 0, &c1, &c2, &c3, &c4, 1);
+						
 
 					if(veh->primaryColor != c1 || veh->secondaryColor != c2
 					|| veh->tertiaryColor != c3 || veh->quaternaryColor != c4)

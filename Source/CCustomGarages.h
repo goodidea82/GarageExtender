@@ -11,6 +11,8 @@
 
 #define GARAGE_TYPE_GRGX	(0xF6) //-10
 #define DEFAULT_GRGX_SIZE	(5)
+//Platinum Edit new ARRAY_ModelInfo pointer
+static const DWORD		ARRAY_ModelInfo = (*(int*)(0x40122D));
 
 enum eGrgxGarageType
 {
