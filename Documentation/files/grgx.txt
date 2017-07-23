@@ -1,0 +1,50 @@
+//
+// Garage eXtender Constants
+//
+const
+// Garage types
+	GRGX_NULL_GARAGE           = 0		// This garage does nothing
+	GRGX_SCRIPT_GARAGE         = -1		// Script controlled garage, the script should open and close it.
+	GRGX_HIDEOUT_GARAGE        = -3		// Normal Save Garage
+	GRGX_PARKING_GARAGE        = -4		// Park Save Garage
+	GRGX_IMPOUND_GARAGE        = -5		// Impound Lot, not working very well
+	GRGX_RESPRAY_GARAGE        = -6		// Pay n' spray garage
+	GRGX_BOMBSHOP1_GARAGE      = -7		// Bomb shop with timed detonator
+	GRGX_BOMBSHOP2_GARAGE      = -8		// Bomb shop with engine ignition detonation
+	GRGX_BOMBSHOP3_GARAGE      = -9		// Bomb shop with remote-control detonator
+	GRGX_BURGALY_GARAGE        = -10    // Burgaly. Must be opened by a script and is closed automatically.
+	GRGX_WHEEL_ARCH_ANGEL      = -11	   // Only accepts vehicles with STREET_RACER flag
+	GRGX_LOCO_LOW_CO           = -12	   // Only accepts vehicles with LOW_RIDER flag
+	GRGX_TRANSFENDER           = -13	   // Accepts vehicles that aren't STREET_RACER neither LOW_RIDER
+	GRGX_ANYCAR_TUNNING_SHOP   = -14	   // Accepts every car
+	GRGX_OPENCLOSE_GARAGE      = -15	   // This garage does nothing but only opens and closes.    
+
+// Garage commands
+	DESTROY_THIS_GARAGE								= -10001
+	IS_GARAGE_CREATED_BY_SCRIPT						= -10002
+	DOES_THIS_GARAGE_CAN_STORE_VEHICLES				= -10003
+	IS_PLAYER_ENTIRELY_INSIDE_GARAGE				= -10004
+	IS_ANY_CAR_BLOCKING_GARAGE_DOOR					= -10005
+	REMOVE_CARS_BLOCKING_GARAGE_DOOR_NOT_INSIDE		= -10006
+	GARAGE_PUSH_OUT_VEHICLES						= -10007
+	GARAGE_PUSH_OUT_VEHICLES_BUT_NOT_TARGET			= -10008
+	IS_ANYTHING_TOUCHING_GARAGE						= -10009
+	IS_NOT_ANYTHING_TOUCHING_GARAGE					= -10009
+	IS_ANY_CAR_TOUCHING_GARAGE						= -10010
+	IS_ANY_PED_TOUCHING_GARAGE						= -10011
+	IS_ANY_CAR_TOUCHING_GARAGE_BUT_NOT_TARGET		= -10012
+	IS_ANY_PED_TOUCHING_GARAGE_BUT_NOT_PLAYER		= -10013
+	IS_STATIC_PLAYER_CAR_ENTIRELY_INSIDE_GARAGE		= -10014
+	IS_GARAGE_A_HIDEOUT								= -10015
+	CLEAR_STORED_CARS_IN_THIS_GARAGE				= -10016
+	TIDY_UP_GARAGE									= -10017
+	TIDY_UP_GARAGE_CLOSE							= -10018
+	GARAGE_STYLE_OPENS_UP							= -10019
+	GARAGE_STYLE_ROTATE								= -10020
+	GARAGE_STYLE_GOES_IN							= -10021
+	GARAGE_STYLE_OPENS_SLOW							= -10022
+	GARAGE_STYLE_OPENS_TOSIDE						= -10023
+	DOES_GARAGE_EXISTS								= -10024
+	SET_GARAGE_DEPPENDS_ON_THIS_THREAD				= -10025
+	SET_GARAGE_DONT_SAVE                            = -10026
+end

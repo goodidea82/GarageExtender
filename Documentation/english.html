@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!-- I'm not a HTML guy, so don't kill me if you see some wrong stuff here! -->
+
+<head>
+	<title>Garage eXtender</title>
+	
+	<style type="text/css">
+		.contents_table
+		{
+			padding: 0px;
+			border: 1px solid black;
+			width: 500px;
+			overflow: hidden;
+		}
+		.contents_table ul
+		{
+			list-style-type:none;
+		}
+	</style>
+	
+</head>
+
+<body>
+	<h1>Garage eXtender<hr/></h1>
+	
+	<table class="contents_table"><tr><td>
+		<center><b>Index</b></center>
+		<ul>
+			<li><a href="#WhatIs">1. What is Garage eXtender</a></li>
+			<li><a href="#Usage">2. Usage</a></li>
+			<ul>
+				<li><a href="#CreatingByIPL">2.1 Creating a GRGX by IPL </a></li>
+				<li><a href="#CreatingBySCM">2.2 Creating a GRGX by script</a></li>
+				<li><a href="#UsingBySCM">2.3 Using the garage by script</a></li>
+				<ul>
+					<li><a href="#SCM_SETUP">2.3.1 Setting it up</a></li>
+					<li><a href="#ControllingBySCM">2.3.2 Garage Opcodes</a></li>
+					<li><a href="#grgx_commands">2.3.3 GRGX Commands</a></li>
+					<li><a href="#CLEO_WARNING">2.3.4 Warning for CLEO scripts</a></li>
+				</ul>
+				<li><a href="#grgx_types">2.4 GRGX Garage Types</a></li>
+			</ul>
+			<li><a href="#GarageDoorNote">3. Garage Door Note</a></li>
+			<li><a href="#SaveFiles">4. Save Files</a></li>
+			<li><a href="#Credits">5. Credits and Contact</a></li>
+		</ul>
+	</td></tr></table><br/>
+
+	<h2><a name="WhatIs">What is Garage eXtender</a><hr/></h2>
+	<p>
+		Garage eXtender (GRGX) is a plugin for GTA San Andreas that adds more options and more garage slots into the game.<br/>
+		<br/>
+		San Andreas have 50 slots for garages, but those slots are already used by default, so no mapper can create custom garages for their maps, that's sad...<br/>
+		This plugin solves this and also add more possibilites into garage system, like parking garages (as in GTA IV), new door movement styles, more garage opcodes...<br/>
+		<br/>
+		Feel free to use this plugin within your mods to be capable of adding more garages into the game, I suggest you to add a link
+		in the readme file into the GTA Forums topic, the mediafire link or the gta garage link, so if I need to update this plugin sometime
+		you're not distributing a old version. But that's your choice, what do you think about it? ;)<br/>
+	</p>
+	
+	<br/><h2><a name="Usage">Usage</a><hr/></h2>
+	<p>
+		There's two ways to create a GRGX. The first one is using a IPL file and the second way is by script (SCM, CLEO...),
+		I wanted to give both (mappers and scripters) the hability to create garages, but of course scripters will have a higher liberty to do whatever he wants to.<br/>
+		<br/>
+		Let's talk about the two ways of creating a garage.<br/>
+		
+		<br/><h3><a name="CreatingByIPL">Creating a GRGX by IPL</a><hr/></h3>
+		<p>
+			The task to create a GRGX by IPL is extremely simple, it's almost like creating a normal garage but with additional parameters.<br/>
+			<br/>
+			You should put the garage creation line inside a <a target="_blank" href="http://www.gtamodding.com/index.php?title=GRGE">grge section</a> (like a normal garage) and then we're done.<br/>
+			The difference from the regular garage line and the grgx line is that grgx have more params, let's compare:<br/>
+			<br/>
+			<b>Regular garage line:</b><br/>
+			<code>x1, y1, z1, x2, y2, x3, y3, z3, flags, type, name</code><br/>
+			<br/>
+			<b>GRGX garage line:</b><br/>
+			<code>x1, y1, z1, x2, y2, x3, y3, z3, flags, unused, name, num_cars, grgx_type, door_style</code><br/>
+			<br/>
+			
+			As you can see, we just added some additional params, in that way we detect if it is a regular garage or a grgx garage being readed from the IPL!<br/>
+			Right, now you should ask the meaning of those params, let me explain.<br/>
+			<a name="IPL_PARAM_TABLE"><table border="1" cellpadding="5">
+				<tr><th>Counter</th><th>Identifier</th><th>Type</th><th>Description</th></tr>
+				
+				<tr><td>1,2,3</td><td>Position 1 (Pos1)</td><td>float[3]</td><td>The garage rear bottom right coordinates</td></tr>
+				<tr><td>4,5</td><td>Position 2 (Depth)</td><td>float[2]</td><td>The garage front coordinates</td></tr>
+				<tr><td>6,7,8</td><td>Position 3 (Pos2)</td><td>float[3]</td><td>The garage rear upper left coordinates</td></tr>
+				<tr><td>9</td><td>Garage flags</td><td>integer</td><td>The garage flags (<a href="#garage_flags">see below</a>)</td></tr>
+				<tr><td>10</td><td>Unused</td><td>integer</td><td>This value is unused. it was the regular garage type. Please use -1 here!</td></tr>
+				<tr><td>11</td><td>Name</td><td>char[8]</td><td>A string which is used to manipulate the behaviour of garages through a script.<br/>The maximum number of characters for the garage name is 7!!!</td></tr>
+				<tr><td>12</td><td>Num Cars</td><td>integer</td><td>The maximum number of cars that this garage can store.<br/>Use -1 for unlimited number of vehicles.<br/>This value is ignored if the garage can't store vehicles</td></tr>
+				<tr><td>13</td><td>GRGX Type</td><td>integer</td><td>The garage type. GRGX type is different from regular garage types, (<a href="#grgx_types">see here</a>)</td></tr>
+				<tr><td>14</td><td>Door Style Flags</td><td>integer</td><td>Door style flags. (<a href="#grgx_style_flags">see below</a>)</td></tr>
+			</table>
+			
+			<br/><h4><a name="garage_flags">Garage Flags</a></h4>
+			<table border="1" cellpadding="5">
+				<tr><th>Flag</th><th>Description</th></tr>
+				
+				<tr><td>1</td><td>Door opens up and rotates (ignored by GRGX, see door style flags)</td></tr>
+				<tr><td>4</td><td>Door goes in (ignored by GRGX, see door style flags)</td></tr>
+				<tr><td>8</td><td>Camera follows player</td></tr>
+			</table></a>
+			As you can see, you are only able to use flag 8 within GRGX.
+
+			<br/><h4><a name="grgx_style_flags">Door style flags</a></h4>
+			<table border="1" cellpadding="5">
+				<tr><th>Flag</th><th>Description</th></tr>
+				
+				<tr><td>1</td><td>Door opens up</td></tr>
+				<tr><td>2</td><td>Door rotates</td></tr>
+				<tr><td>4</td><td>Door goes in</td></tr>
+				<tr><td>8</td><td>Door opens slow</td></tr>
+				<tr><td>16</td><td>Door opens to side</td></tr>
+			</table>
+			Sum the flags to get the flag you want. (e.g. 1+2+8 = 11)<br/>
+			
+			<br/><b>Final notes</b><br/>
+			<a href="./files/example.ipl" target="_blank">Click here</a> to see a example of a garage created by IPL, the garage is at grove street!<br/>
+			Remember, the garage door only opens if it's really a garage door, see more <a href="#GarageDoorNote">here</a><br/>			
+		</p>
+		
+		<br/><h3><a name="CreatingBySCM">Creating a GRGX by script</a><hr/></h3>
+		<p>
+			If you didn't read the <a href="#SCM_SETUP">Setting it up</a> topic yet, read it first!!!<br/>
+			<br/>
+			Creating garages by script is also very simple, it uses the method used by III\VC to create garages (CREATE_GARAGE).<br/>
+			Just put this line where you want to create the garage: (don't duplicate the garage, the garage must be created only once!)<br/>
+			<code>0219: create_garage xyz1 2497.3 -1677.37 12.1 xy2 2497.3 -1670.07 xyz3 2504.08 -1677.37 16.3375 type GRGX_HIDEOUT_GARAGE name 'TEST'</code><br/>
+			<br/>
+			<i>
+				Note 1: Remember to include grgx.txt!!! <br/>
+				Note 2: You can also use "CREATE_GARAGE" instead of "0219: create_garage"<br/>
+				Note 3: The garage name must have a maximum number of 7 characteres"<br/>
+			</i>
+			<br/>
+			This garage is at grove street, remember: you need a door!<br/>
+			Of course the garage name must be different for each garage, 'TEST' is just a example!<br/>
+			If you're asking yourself what's that 3 coordinates, type and name, please take a look at the <a href="#IPL_PARAM_TABLE">IPL params table</a>, it will give you a good explanation, note that type is <a href="#grgx_types">grgx_type</a> and not a regular type!<br/>
+			Now, you must be asking, how to do those cool stuff, like change the way the door movement? See the next topic, Using the garage by script.<br/>
+			<br/>
+			<b><span style="color:red;">WARNING:</span></b> If you're going to create garages in a CLEO Script, please look at the topic <a href="CLEO_WARNING">"WARNING FOR CLEO SCRIPTS"</a><br/>
+		</p>
+		
+		<br/><h3><a name="UsingBySCM">Using the garage by script</a><hr/></h3>
+		<p>
+			<br/><h3><a name="SCM_SETUP">Setting it up</a></h3>
+			<p>
+				Before anything, you should setup your sanny builder files to work within the new garage opcodes.
+
+				Follow these steps:
+				<ol>
+					<li>Open your Sanny Builder root folder, data folder and then sa folder (example: "C:\Program Files (x86)\Sanny Builder 3\data\sa")</li>
+					<li>Open opcodes.txt file and add the following lines:<br/><br/>
+						<code>
+							0219: create_garage xyz1 2497.3 -1677.37 12.1 2497.3 xy2 -1670.07 2504.08 xyz3 -1677.37 16.3375 type GRGX_RESPRAY_GARAGE name 'TEST'<br/>
+							021C:   is_car_in_mission_garage 'TEST'<br/>
+							02FA: grgx_command 'TEST' DESTROY_THIS_GARAGE<br/>
+							0329:   has_respray_happened_on_garage 'TEST'<br/>
+							03BB: set_garage 'TEST' door_to_rotate <br/>
+							03DA: set_garage 'TEST' camera_follows_player<br/>
+							057A: set_garage 'TEST' max_cars_to 1<br/>
+						</code><br/>
+						<br/>
+					</li>
+					<li>Open sascm.ini file and add the following lines: (before insertting those lines check if any of the opcodes are already registered, if yes, remove it and then continue)<br/><br/>
+						<code>
+							0219=10,create_garage xyz1 %1d% %2d% %3d% xy2 %4d% %5d% xyz3 %6d% %7d% %8d% type %9d% name %10d%<br/>
+							021c=1, is_car_in_mission_garage %1d%<br/>
+							0329=1,has_respray_happened %1d%<br/>
+							03bb=1,set_garage %1d% door_to_rotate<br/>
+							03da=1, set_garage %1d% camera_follows_player<br/>
+							057a=2,set_garage %1d% max_cars_to %2d%<br/>
+						</code><br/>
+						<br/>
+					</li>
+					<li>[OPTIONAL] Open keywords.txt and add the following lines:<br/><br/>
+						<code>
+							0219=CREATE_GARAGE<br/>
+							021C=IS_CAR_IN_MISSION_GARAGE<br/>
+							02FA=GRGX_COMMAND<br/>
+							0329=HAS_RESPRAY_HAPPENED<br/>
+							03BB=SET_GARAGE_DOOR_TO_ROTATE<br/>
+							03DA=SET_GARAGE_CAMERA_FOLLOWS_PLAYER<br/>
+							057A=SET_GARAGE_MAX_CARS<br/>
+						</code><br/>
+						<br/>
+					</li>
+					<li>Copy the file <a href="./files/grgx.txt" target="_blank">grgx.txt</a> into the Sanny Builder\data\sa folder<br/><br/>
+						<code>
+							0219=CREATE_GARAGE<br/>
+							021C=IS_CAR_IN_MISSION_GARAGE<br/>
+							02FA=GRGX_COMMAND<br/>
+							0329=HAS_RESPRAY_HAPPENED<br/>
+							03BB=SET_GARAGE_DOOR_TO_ROTATE<br/>
+							03DA=SET_GARAGE_CAMERA_FOLLOWS_PLAYER<br/>
+							057A=SET_GARAGE_MAX_CARS<br/>
+						</code><br/>
+						<br/>
+					</li>
+					<li>You are done. Now whenever you use GRGX on your project, include the file grgx.txt by putting the following line at the top of the code:<br/>
+						<code>{$INCLUDE grgx.txt}</code>
+					</li>
+				</ol>
+				
+			</p>				
+		
+			<br/><h3><a name="ControllingBySCM">Garage Opcodes</a></h3>
+			<p>
+				With a script you can control during run-time a couple of garage aspects, like if the garage is activated, change the garage type and other stuffs.<br/>
+				We have new opcodes for garage management, opcodes removeds in SA but were in III\VC.<br/>
+				<br/>
+				Here we are going to have a format like this: [OPCODE] COMMAND_NAME (params)<br/>
+				
+				<h4>[0299] ACTIVATE_GARAGE (string)</h4>
+				This commands enables the garage, so the garage can open and close normally. By default the garage is activated.<br/>
+
+				<h4>[02B9] DEACTIVATE_GARAGE (string)</h4>
+				This commands disables the garage, so the garage can't open anymore. To enable the garage again use the above command<br/>
+				For parking garages this command disables the possibility to save the car in that area.<br/>
+				
+				<h4>[02FA] CHANGE_GARAGE_TYPE (string, int)</h4>
+				This command changes the garage type, see the <a href="grgx_types">list of grgx garage types</a><br/>
+				Doesn't work with parking garages created by IPL!<br/>
+				
+				<h4>[0360] OPEN_GARAGE (string)</h4>
+				Opens the garage door<br/>
+				
+				<h4>[0361] CLOSE_GARAGE (string)</h4>
+				Closes the garage door<br/>
+				
+				<h4>[03B0] IS_GARAGE_OPEN (string)</h4>
+				Checks if the garage door is open<br/>
+				
+				<h4>[03B1] IS_GARAGE_CLOSED (string)</h4>
+				Checks if the garage door is closed<br/>
+				
+				<h4><a name="021B">[021B] SET_TARGET_CAR_FOR_MISSION_GARAGE (string, int)</a></h4>
+				Sets the garage to accept only the specified vehicle. Send -1 instead of the vehicle handle to unregister the target car.<br/>
+				Note that GRGX only supports one garage with the ability to have a target car, see the <a href="grgx_types">list of grgx garage types</a>.<br/>
+				
+				<br/><br/><i style="color:blue;">The following opcodes are grgx specific, caught from III\VC</i><br/>
+				
+				<h4>[021C] IS_CAR_IN_MISSION_GARAGE (string)</h4>
+				Checks if the target car (set with 021B) is inside the garage.<br/>
+				
+				<h4><a name="02FA">[02FA] GRGX_COMMAND (string, int)</a></h4>
+				Sends a command to a grgx garage. See a list of grgx commands <a href="#grgx_commands">here</a><br/>.
+				Note that this is the same as [02FA] CHANGE_GARAGE_TYPE, but behaves different because the value sent is a command constant and not a garage type.<br/>
+				
+				<h4>[0329] HAS_RESPRAY_HAPPENED_ON_GARAGE (string)</h4>
+				Checks if the player has painted it's car on this garage.<br/>
+
+				<h4>[03BB] SET_GARAGE_DOOR_TO_ROTATE (string)</h4>
+				Makes the garage door to opens up and rotate.<br/>
+				This is the same as sending the grgx commands GARAGE_STYLE_OPENS_UP and GARAGE_STYLE_ROTATE<br/>
+				
+				<h4>[03DA] SET_GARAGE_CAMERA_FOLLOWS_PLAYER (string)</h4>
+				Makes the camera to follows the player when inside the garage<br/>
+				
+				<h4>[057A] SET_GARAGE_MAX_CARS_TO (string, int)</h4>
+				Sets the maximum number of cars that the garage can store. Use -1 for unlimited number of cars.<br/>
+				Has no effect for garages that can't store vehicles<br/>
+	
+				<h4>[0219] CREATE_GARAGE</h4>
+				<a href="#CreatingBySCM">See here</a><br/>
+			</p>
+			
+			<br/><h3><a name="grgx_commands">GRGX Commands</a></h3>
+			<p>
+				The following commands can be used with <a href="#02FA">02FA</a> to change the behaviour of the garage or do something:<br/>
+				<table border="1" cellpadding="5">
+					<tr><th>Identifier</th><th>Description</th></tr>
+					<tr><td>DESTROY_THIS_GARAGE</td><td>Removes the garage from the game.</td></tr>
+					<tr><td>IS_GARAGE_CREATED_BY_SCRIPT</td><td>Checks if the garage has been created by a script</td></tr>
+					<tr><td>DOES_THIS_GARAGE_CAN_STORE_VEHICLES</td><td>Checks if the garage can store vehicles</td></tr>
+					<tr><td>IS_PLAYER_ENTIRELY_INSIDE_GARAGE</td><td>Checks if the player ie ntirely inside the garage</td></tr>
+					<tr><td>IS_ANY_CAR_BLOCKING_GARAGE_DOOR</td><td>Checks if there's any car blocking the garage door</td></tr>
+					<tr><td>REMOVE_CARS_BLOCKING_GARAGE_DOOR_NOT_INSIDE</td><td>Removes any car blocking the garage door</td></tr>
+					<tr><td>GARAGE_PUSH_OUT_VEHICLES</td><td>Push out all vehicles trying to enter the garage</td></tr>
+					<tr><td>GARAGE_PUSH_OUT_VEHICLES_BUT_NOT_TARGET</td><td>Push out all vehicles trying to enter the garage, but not the target.</td></tr>
+					<tr><td>IS_NOT_ANYTHING_TOUCHING_GARAGE</td><td>Checks if nothing is touching the garage</td></tr>
+					<tr><td>IS_ANY_CAR_TOUCHING_GARAGE</td><td>Checks if there's any car touching the garage</td></tr>
+					<tr><td>IS_ANY_PED_TOUCHING_GARAGE</td><td>Checks if there's any ped touching the garage</td></tr>
+					<tr><td>IS_ANY_CAR_TOUCHING_GARAGE_BUT_NOT_TARGET</td><td>Checks if there's any car touching the garage, but not the target</td></tr>
+					<tr><td>IS_ANY_PED_TOUCHING_GARAGE_BUT_NOT_PLAYER</td><td>Checks if there's any ped touching the garage, but not the player</td></tr>
+					<tr><td>IS_STATIC_PLAYER_CAR_ENTIRELY_INSIDE_GARAGE</td><td>Checks if the player car is inside the garage</td></tr>
+					<tr><td>IS_GARAGE_A_HIDEOUT</td><td>Checks if the garage is a hideout (e.g. a save garage)</td></tr>
+					<tr><td>CLEAR_STORED_CARS_IN_THIS_GARAGE</td><td>Clear all cars stored in this garage</td></tr>
+					<tr><td>TIDY_UP_GARAGE</td><td></td></tr>
+					<tr><td>TIDY_UP_GARAGE_CLOSE</td><td></td></tr>
+					<tr><td>GARAGE_STYLE_OPENS_UP</td><td>Makes the garage door to open up</td></tr>
+					<tr><td>GARAGE_STYLE_ROTATE</td><td>Makes the garage door to rotate</td></tr>
+					<tr><td>GARAGE_STYLE_GOES_IN</td><td>Makes the garage door to go in</td></tr>
+					<tr><td>GARAGE_STYLE_OPENS_SLOW</td><td>Makes the garage door to open slow</td></tr>
+					<tr><td>GARAGE_STYLE_OPENS_TOSIDE</td><td>Makes the garage door to open to side</td></tr>
+					<a name="DOES_GARAGE_EXISTS"><tr><td>DOES_GARAGE_EXISTS</td><td>Checks if the garage exist</td></tr></a>
+					<a name="SET_GARAGE_DEPPENDS_ON_THIS_THREAD"><tr><td>SET_GARAGE_DEPPENDS_ON_THIS_THREAD</td><td>Makes the garage deppends on the script that sent this command!<br/>If the script that called this doesn't exist anymore, the garage will be destroyed. Works after a load game too!<br/>The script must have a fixed name (set with 03A4)</td></tr></a>
+					<a name="SET_GARAGE_DONT_SAVE"><tr><td>SET_GARAGE_DONT_SAVE</td><td>The garage won't be saved in a save-game</td></tr></a>
+				</table>
+				<br/>
+				Note that you can use the rule of the not flag to not a command, e.g. if you use GARAGE_STYLE_OPENS_UP without the not flag the garage is going to open up, if you use with the not flag the garage is NOT going to open up, but open down.<br/>
+				<br/><b>Examples:</b><br/>
+				<code>
+					82FA: grgx_command 'TEST' GARAGE_STYLE_OPENS_UP // The garage door will NOT open up (will open down), see the NOT (8 instead of 0 in the front of the opcode).<br/>
+					02FA: grgx_command 'TEST' GARAGE_STYLE_ROTATE // The garage door will rotate<br/>
+					02FA: grgx_command 'TEST' GARAGE_PUSH_OUT_VEHICLES // Will push out any vehicle trying to enter the garage (must be in a loop to work properly)<br/>
+				</code>
+			</p>
+			
+			<br/><h3><a name="CLEO_WARNING">Warning for CLEO scripts</a></h3>
+			<p>
+				After a garage is created by a script, it is saved in a save game and all that stuff, like a create_object. So we came into a problem:<br/>
+				What if the user deletes your script? The garage will be lost in the save-game!!!<br/>
+				But we can solve this easilly by using <a href="#SET_GARAGE_DEPPENDS_ON_THIS_THREAD">SET_GARAGE_DEPPENDS_ON_THIS_THREAD</a> or even <a href="#SET_GARAGE_DONT_SAVE">SET_GARAGE_DONT_SAVE</a><br/>
+				<br/>
+				We have another warning related with the scripter logic, when the user loads the game your script is restarted from the beggining (not if you use 0A95!), so if you came to the begging of your script again, make sure you are not going to duplicate (create again) the garage.
+				Use 0A95 or <a href="#DOES_GARAGE_EXISTS">DOES_GARAGE_EXISTS</a> before creating the garage.<br/>
+			</p>
+		
+		</p>		
+	</p>
+	
+	<br/><h3><a name="grgx_types">GRGX Garage Types</a><hr/></h3>
+	<p>
+		Here is a table showing the GRGX garage types, you should use the constant name if using in a script or the id if using in a IPL.<br/>
+		<table border="1" cellpadding="5">
+			<tr><th>ID</th><th>Name</th><th>Description</th></tr>
+			<tr><td>0</td><td>GRGX_NULL_GARAGE</td><td>This garage does nothing</td></tr>
+			<tr><td>1</td><td>GRGX_SCRIPT_GARAGE</td><td>Script controlled garage, the script should open and close it.</td></tr>
+			<tr><td>3</td><td>GRGX_HIDEOUT_GARAGE</td><td>Normal Save Garage</td></tr>
+			<tr><td>4</td><td>GRGX_PARKING_GARAGE</td><td>Park Save Garage</td></tr>
+			<tr><td>5</td><td>GRGX_IMPOUND_GARAGE</td><td>Impound Lot, not working very well</td></tr>
+			<tr><td>6</td><td>GRGX_RESPRAY_GARAGE</td><td>Pay n' spray garage</td></tr>
+			<tr><td>7</td><td>GRGX_BOMBSHOP1_GARAGE</td><td>Bomb shop with timed detonator</td></tr>
+			<tr><td>8</td><td>GRGX_BOMBSHOP2_GARAGE</td><td>Bomb shop with engine ignition detonation</td></tr>
+			<tr><td>9</td><td>GRGX_BOMBSHOP3_GARAGE</td><td>Bomb shop with remote-control detonator</td></tr>
+			<tr><td>10</td><td>GRGX_BURGALY_GARAGE</td><td>Burgaly. Must be opened by a script and is closed automatically.</td></tr>
+			<tr><td>11</td><td>GRGX_WHEEL_ARCH_ANGEL</td><td>Only accepts vehicles with STREET_RACER flag</td></tr>
+			<tr><td>12</td><td>GRGX_LOCO_LOW_CO</td><td>Only accepts vehicles with LOW_RIDER flag</td></tr>
+			<tr><td>13</td><td>GRGX_TRANSFENDER</td><td>Accepts vehicles that aren't STREET_RACER neither LOW_RIDER</td></tr>
+			<tr><td>14</td><td>GRGX_ANYCAR_TUNNING_SHOP</td><td>Accepts every car</td></tr>
+			<tr><td>15</td><td>GRGX_OPENCLOSE_GARAGE</td><td>This garage does nothing but only opens and closes.<br/>This is the only garage on GRGX that accepts a target car, if a target car is set (using <a href="#021B">021B</a>) the garage will only open for the target car.</td></tr>
+		</table>		
+	</p>
+	
+	<br/><h2><a name="GarageDoorNote">Garage Door Note</a><hr/></h2>
+	<p>
+		<i>Notes taken from: <a href="http://www.gtamodding.com/index.php?title=GRGE">http://www.gtamodding.com/index.php?title=GRGE</a></i><br/>
+		
+		<ul>
+			<li><q>The garage door only opens if the IDE flag value of the door is 2048 and the door is defined in the object.dat file.</q></li>
+			<li><q>Garage doors are very important for the camera rotation. They control how the camera moves after you have entered a garage. If your camera moves wrong, then simply rotate the pivot of your garage door, map the new one and rotate it until it fits with the rotation you want. Then test if the camera moves correctly in-game.<br/><br/>
+				If you have not mapped a garage door the camera will move to the west, which corresponds to a garage door rotation of 0 degrees around the z axis.
+			</q><br/></li>
+		</ul>
+	</p>
+	
+	<br/><h2><a name="SaveFiles">Save Files</a><hr/></h2>
+	<p>
+		Garage eXtender doesn't store their garages on the default San Andreas save files, there's many reason behid it but the main one is to not corrupt the save file.<br/>
+		The save files for grgx are stored in "GTA San Andreas User Files/grgx/%d.sav", where %d is the save slot.<br/>
+	</p>
+	
+	<br/><h2><a name="Credits">Credits and Contact</a><hr/></h2>
+	<p>
+		This plugin was created by <a href="http://link2012world.blogspot.com.br/">LINK/2012</a> &lt;dma_2012@hotmail.com&gt;<br/>
+		Visit also <a href="http://brmodstudio.forumeiros.com/">Brazillian Modding Studio</a><br/>
+		<br/>
+		Please report if you find any bug!!<br/>
+		<br/>
+		Thanks :)	
+	</p>
+	
+	<br/><br/><br/><br/>
+</body>

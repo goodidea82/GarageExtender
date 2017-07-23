@@ -1,0 +1,9 @@
+Garage eXtender history
+
+v1.0 - Dec 2 2012
+	First public release
+
+
+v1.0.1 - Jan 20 2013
+	Fixed a bug that crashes your game when using the opcode 03AF
+

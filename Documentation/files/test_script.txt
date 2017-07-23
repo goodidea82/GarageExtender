@@ -1,0 +1,193 @@
+{$CLEO}
+{$INCLUDE grgx.txt}
+
+// TYPE "CREATE" TO CREATE A GARAGE, READ THE OTHER COMMANDS AROUND THE CODE...
+
+thread 'SCRIPTX'
+31@ = -1
+30@ = 0
+33@ = 1
+gosub @CREATE_GARAGE_OPCODE
+//2497.3 -1677.37 12.1 2497.3 -1670.07 2504.08 -1677.37 16.3375 1, -1, TEST, -1, 1, 1
+
+while true
+    wait 0    
+    gosub @MISSION_GARAGE_OPCODES
+    gosub @CREATE_GARAGE_OPCODE
+    gosub @OPENCLOSE_OPCODES
+    gosub @RESPRAY_HAPPENED_OPCODE
+    gosub @ACTIVATE_OPCODES
+    gosub @CHANGETYPE_OPCODES
+    gosub @TEST_COMMANDS
+end
+
+
+:OPENCLOSE_OPCODES
+0@v = "FALSE"
+4@v = "FALSE"
+if 03B0:   garage 'TEST' door_open
+then
+    0@v = "TRUE"
+end
+if 03B1:   garage 'TEST' door_closed
+then
+    4@v = "TRUE"
+end
+    
+if 0ADC:   test_cheat "OPEN"
+then
+    0360: open_garage 'TEST'
+    0ACA: show_text_box "OPEN"
+else
+    if 0ADC:   test_cheat "CLOSE"
+    then
+        0361: close_garage 'TEST'
+        0ACA: show_text_box "CLOSE"
+    end
+end
+
+0AD1: show_formatted_text_highpriority "Open: %s~n~Closed: %s" time 2000 0@v 4@v
+return
+
+
+:ACTIVATE_OPCODES
+if 0ADC:   test_cheat "DEACTIVATE"
+then
+    02B9: deactivate_garage 'TEST'
+    0ACA: show_text_box "DEACTIVATE"
+else
+    if 0ADC:   test_cheat "ACTIVATE"
+    then
+        0299: activate_garage 'TEST'
+        0ACA: show_text_box "ACTIVATE"
+    end
+end
+return
+
+:CHANGETYPE_OPCODES
+0@ = 0
+if 0ADC:   test_cheat "SPRAY"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type -6
+end
+if 0ADC:   test_cheat "SCRIPT"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 19
+end
+if 0ADC:   test_cheat "ANGEL"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 37
+end
+if 0ADC:   test_cheat "LOUCO"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 36
+end
+if 0ADC:   test_cheat "TRANS"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 38
+end
+if 0ADC:   test_cheat "THIEF"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 43
+end
+if 0ADC:   test_cheat "HANGAR"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type 45
+end
+if 0ADC:   test_cheat "HIDEOUT"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type -3
+end
+if 0ADC:   test_cheat "BASIC"
+then
+    0@ = 1
+    02FA: set_garage 'TEST' type -15
+end
+
+if 0@ <> 0
+then
+        0ACA: show_text_box "SET"   
+end
+return
+
+:RESPRAY_HAPPENED_OPCODE
+0330: set_player $PLAYER_CHAR infinite_run 1            // Test if I messed up the opcode table here
+if 0329:   garage 'TEST' respray_done
+then 
+    0AD1: show_formatted_text_highpriority "RESPRAY DONE" time 2000
+end
+return
+
+
+:CREATE_GARAGE_OPCODE
+if or
+    33@ == 0
+    0ADC:   test_cheat "CREATE"
+then
+    30@ += 1
+    if 30@ == 1
+    then 0219: create_garage 2497.3 -1677.37 12.1 2497.3 -1670.07 2504.08 -1677.37 16.3375 type -3 name 'TEST'
+    end
+    if 30@ == 2
+    then 0219: create_garage 2497.3 -1677.37 12.1 2497.3 -1670.07 2504.08 -1677.37 16.3375 type -3 name 'TESTX'
+    end
+    if 30@ == 3
+    then 0219: create_garage 2497.3 -1677.37 12.1 2497.3 -1670.07 2504.08 -1677.37 16.3375 type -3 name 'TESTY'
+    end    
+end
+
+if 0ADC:   test_cheat "ROTATE"
+then
+    03BB: set_garage 'TEST' door_type_to_swing_open
+end
+
+if 0ADC:   test_cheat "FOLLOW"
+then
+    03DA: set_garage 'TEST' camera_follows_player 
+end
+
+if 0ADC:   test_cheat "MAXCAR"
+then
+    057A: set_garage 'TEST' max_cars_to -1
+end
+return
+
+:MISSION_GARAGE_OPCODES
+if 0ADC:   test_cheat "MISSIONCAR"
+then
+    04C4: store_coords_to 0@ 1@ 2@ from_actor $PLAYER_ACTOR with_offset 1.0 3.0 1.0
+    0247: load_model #SULTAN
+    038B: load_requested_models
+    00A5: 31@ = create_car #SULTAN at 0@ 1@ 2@
+end
+if
+    0ADC:   test_cheat "UNTARGET"
+then
+    021B: set_garage 'TEST' to_accept_only_car -1
+end
+if and
+    0ADC:   test_cheat "TARGET"
+    31@ <> -1
+then
+    021B: set_garage 'TEST' to_accept_only_car 31@
+end
+if 0ADC:   test_cheat "INSIDE"
+then
+    if 021C:   car_inside_garage 'TEST'
+    then 0ACA: show_text_box "INSIDE"
+    else 0ACA: show_text_box "NOT INSIDE"
+    end
+end
+return
+
+:TEST_COMMANDS
+02FA: garage_command 'TEST' SET_GARAGE_DONT_SAVE
+return

@@ -1,0 +1,40 @@
+	    _/        _/_/_/  _/      _/  _/    _/          _/    _/_/      _/      _/    _/_/    
+	   _/          _/    _/_/    _/  _/  _/          _/    _/    _/  _/  _/  _/_/  _/    _/   
+	  _/          _/    _/  _/  _/  _/_/          _/          _/    _/  _/    _/      _/      
+	 _/          _/    _/    _/_/  _/  _/      _/          _/      _/  _/    _/    _/         
+	_/_/_/_/  _/_/_/  _/      _/  _/    _/  _/          _/_/_/_/    _/      _/  _/_/_/_/      
+	www.link2012world.blogspot.com
+
+*Esse leia-me é melhor visualizado em tela cheia e com fontes monoespaçadas (Como Courier New)
+
+
+	 ____________________________________________________________________________
+	/
+	   >>>>>>>>> Garage eXtender <<<<<<<<<
+
+		Esse plugin asi adiciona aumenta o limite das garagens e adiciona mais funcionalidades a ela.
+		Se você é um desenvolvedor, leia a documentação para mais detalhes!
+		
+	\____________________________________________________________________________
+
+-Como Instalar
+
+	Em primeiro lugar, você precisa de um ASI Loader
+		*ASI Loader: http://www.gtagarage.com/mods/show.php?id=21709
+
+	Se você ja tem o ASI Loader, copie o arquivo "grgx.asi" para a pasta do seu jogo.
+
+-Licença
+	*Você pode compartilhar esse mod, creditos serão apreciados (LINK/2012);
+	*Não modifique esse mod, a não ser que você não publique ou compartilhe a versão modificada (i.e. Para uso pessoal);
+	*Não use essa modificação para fins comerciais;
+	*Os termos acima podem ser ignorados se você obter permisão do autor do mod.
+
+
+-Creditos e Obrigados
+	*Modificação feita por: LINK/2012 	(www.link2012world.blogspot.com)
+	*Obrigado a Rockstar por ter feito esse jogo maravilhoso.
+
+
+Obrigado ;)
+www.link2012world.blogspot.com
