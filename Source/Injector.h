@@ -9,6 +9,7 @@
 #ifdef _DEBUG
 #include <cstdio>
 #include <cstdarg>
+#include <math.h>
 #endif
 
 
