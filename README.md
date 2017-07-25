@@ -60,3 +60,5 @@ v1.0.2 - July 17 2017
 v1.0.3 - July 23 2017
     Updated version by inan.ahammad (and PlatinumSerb?)
 
+v1.0.4 - July 25 2017
+    Update goodidea82. A bugfix and improved compatibility
