@@ -644,7 +644,9 @@ namespace CStreaming
 	DeclareFunc(0x4087E0, char (*RequestModel)(int model, int));
 	//DeclareArray(0x8E4CC0, ModelInfo[25000], aInfoForModel);
 	//PlatinumEdit:
-	DeclareArray((0x408ADA + 3), ModelInfo[50000], aInfoForModel);
+	//DeclareArray(((0x408ADA + 3)), ModelInfo[50000], aInfoForModel);
+	//Goodidea82 Edit: Because: (0x408ADA + 3) - holds a POINTER TO CStreaming::ms_aInfoForModel array (0x8E4CC0 by default)
+	DeclareArray((*(ModelInfo**)(0x408ADA + 3)), ModelInfo[50000], aInfoForModel);
 };
 
 

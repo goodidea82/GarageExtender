@@ -12,7 +12,11 @@
 #define GARAGE_TYPE_GRGX	(0xF6) //-10
 #define DEFAULT_GRGX_SIZE	(5)
 //Platinum Edit new ARRAY_ModelInfo pointer
-static const DWORD		ARRAY_ModelInfo = (*(int*)(0x40122D));
+//static const DWORD		ARRAY_ModelInfo = (*(int*)(0x40122D));
+//Edit by goodidea82
+//(0x4C5538+3)- holds a pointer to CStreaming::ms_modelInfoPtrs array (0x0xA9B0C8 by default)
+//Using #define instead of const variable so that the expression is evaluated later when it is used instead of when the asi is loaded.
+#define ARRAY_ModelInfo (*(DWORD**)(0x4C5538 + 3)) 
 
 enum eGrgxGarageType
 {
