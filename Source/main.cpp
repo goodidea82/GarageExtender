@@ -15,6 +15,7 @@ extern void ScriptCommands_Patch();
 extern void GRGX_Patch();
 extern void GRGX_Detach();
 
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
@@ -28,7 +29,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		myfile << "ARRAY_ModelInfo (*(DWORD**)(0x40122D))=" << (*(DWORD**)(0x40122D)) << endl;
 		myfile << "ARRAY_ModelInfo (*(DWORD**)(0x4C5538+3))=" << (*(DWORD**)(0x4C5538 + 3)) << endl;
 		
-
 		GameVersion gv(SA);
 		if(gv.Get() != gv.SA_10US)
 		{
