@@ -257,7 +257,7 @@ class CDebugLog
 		CDebugLog(const char* name = nullptr)
 		{
 #ifdef _DEBUG
-			if(name == nullptr) name = "log.txt";
+			if(name == nullptr) name = "grgx.log";
 			this->stream = fopen(name, "w");
 			this->Print("Log started");
 #endif

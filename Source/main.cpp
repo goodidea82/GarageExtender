@@ -9,7 +9,6 @@
 #include <Windows.h>
 #include <cstdio>
 #include "Injector.h"
-#include <fstream> //for debug output
 
 extern void ScriptCommands_Patch();
 extern void GRGX_Patch();
@@ -23,11 +22,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 {
 	if(ul_reason_for_call == DLL_PROCESS_ATTACH)
 	{
-		using namespace std;
-		ofstream myfile("grgx.log");
-		myfile << "CStreaming::aInfoForModel=" << CStreaming::aInfoForModel << endl;
-		myfile << "ARRAY_ModelInfo (*(DWORD**)(0x40122D))=" << (*(DWORD**)(0x40122D)) << endl;
-		myfile << "ARRAY_ModelInfo (*(DWORD**)(0x4C5538+3))=" << (*(DWORD**)(0x4C5538 + 3)) << endl;
+		CDebugLog::Trace("CStreaming::aInfoForModel=%X", CStreaming::aInfoForModel);
+		CDebugLog::Trace("ARRAY_ModelInfo (*(DWORD**)(0x40122D))=%X", (*(DWORD**)(0x40122D)) );
+		CDebugLog::Trace("ARRAY_ModelInfo (*(DWORD**)(0x4C5538+3))=%X", (*(DWORD**)(0x4C5538 + 3)) );
 		
 		GameVersion gv(SA);
 		if(gv.Get() != gv.SA_10US)
