@@ -115,8 +115,11 @@ CCustomGarage* CGarages::AddOneX(float x1, float y1, float z1, float frontX, flo
 		CDebugLog::Trace(
 			"\tAdded GRGX.\n"
 			"\t\tName: %s\n"
+			"\t\tCan store vehicle: %s\n"
 			"\t\tIs Parking Garage: %s\n",
-				g->Name, g->IsParkingGarage()? "true" : "false");
+				g->Name, 
+				g->DoesThisGarageCanStoreVehicles() ? "true" : "false",
+				g->IsParkingGarage() ? "true" : "false");
 
 		return g;
 	}
