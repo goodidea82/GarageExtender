@@ -452,7 +452,8 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 				fwrite(static_cast<SaveFileStruct::GarageData*>(garage),
 					sizeof(SaveFileStruct::GarageData), 1, f);
 				const int count = garage->CountNumCarsInThisGarage();
-				CDebugLog::Trace("\tGarage id=%d. CountNumCarsInThisGarage() = %d", i, count);
+				const bool canStore = garage->DoesThisGarageCanStoreVehicles();
+				CDebugLog::Trace("\tGarage id=%d. CanStoreVehicle = %s, CountNumCarsInThisGarage() = %d", i, (canStore?"true":"false"), count);
 				if(count)
 				{
 					fwrite(&garage->cars[0], sizeof(SaveFileStruct::CarData), count, f);
