@@ -259,7 +259,7 @@ class CDebugLog
 #ifdef _DEBUG
 			if(name == nullptr) name = "grgx.log";
 			this->stream = fopen(name, "w");
-			this->Print("Log started");
+			this->Print("Log started\n Compiled date and time %s @ %s\n with compiler _MSC_VER = %d", __DATE__, __TIME__, _MSC_VER);
 #endif
 		}
 

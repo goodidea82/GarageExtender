@@ -116,10 +116,12 @@ CCustomGarage* CGarages::AddOneX(float x1, float y1, float z1, float frontX, flo
 			"\tAdded GRGX.\n"
 			"\t\tName: %s\n"
 			"\t\tCan store vehicle: %s\n"
-			"\t\tIs Parking Garage: %s\n",
-				g->Name, 
+			"\t\tIs Parking Garage: %s\n"
+			"\t\tIs g->gStyle & GARAGE_DONT_SAVE: %s\n",
+				g->Name,
 				g->DoesThisGarageCanStoreVehicles() ? "true" : "false",
-				g->IsParkingGarage() ? "true" : "false");
+				g->IsParkingGarage() ? "true" : "false",
+				(g->gStyle & GARAGE_DONT_SAVE)? "true" : "false");
 
 		return g;
 	}
@@ -255,8 +257,15 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		{
 			SaveFileStruct::Header header;
 
-			if(fread(&header, sizeof(header), 1, f) != 1) break;
-			if(header.magic != SaveFileStruct::magic) break;
+			if (fread(&header, sizeof(header), 1, f) != 1) {
+				CDebugLog::Trace("\tERROR fread(&header, sizeof(header), 1, f) != 1");
+				break;
+			}
+			if (header.magic != SaveFileStruct::magic) {
+				CDebugLog::Trace("\tERROR header.magic != SaveFileStruct::magic");
+				break;
+			}
+			CDebugLog::Trace("\tnum_garages = %d", header.num_garages);
 
 			if(memcmp(&header.save_time, &info.time, sizeof(SYSTEMTIME)) || header.num_garages == 0)
 			{
@@ -307,10 +316,14 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 					{
 						garage = static_cast<CCustomGarage*>(gbase);
 						
-						if(garage->Position.x != garage_data.Position.x
-						|| garage->Position.y != garage_data.Position.y
-						|| garage->Position.z != garage_data.Position.z)
+						if (garage->Position.x != garage_data.Position.x
+							|| garage->Position.y != garage_data.Position.y
+							|| garage->Position.z != garage_data.Position.z) 
+						{
+							CDebugLog::Trace("\tWARNING Garage definition not found that corresponds to the save file!");
 							continue;
+						}
+							
 
 						garage->DoorPosition = garage_data.DoorPosition;
 						garage->TimeToOpen = garage_data.TimeToOpen;
@@ -335,9 +348,11 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 					{
 						if(fread(&garage->cars[0], sizeof(CStoredCar), num_cars, f) != num_cars)
 						{
+							CDebugLog::Trace("\tERROR Failed to restore cars!");
 							Failure = true;
 							break;
 						}
+						CDebugLog::Trace("\tRestored %d cars:", num_cars);
 					}
 				}
 				delete[] pGarages;
@@ -368,11 +383,19 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 	{
 		size_t num_garages = 0;
 		size_t next_data_block;
+		int dontSaveCount = 0;
 
 		for(auto it = CGarages::Garages().begin(); it != CGarages::Garages().end(); ++it)
 		{
-			if( !((**it).gStyle & GARAGE_DONT_SAVE) ) ++num_garages;
+			if (!((**it).gStyle & GARAGE_DONT_SAVE)) {
+				++num_garages;
+			}
+			else {
+				dontSaveCount++;
+			}
+
 		}
+		CDebugLog::Trace("\tnum_garages = %d, GARAGE_DONT_SAVE = %d", num_garages, dontSaveCount);
 
 		SaveFileStruct::Header header =
 			{ SaveFileStruct::magic, SaveFileStruct::version, info.time, num_garages };
@@ -421,11 +444,16 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 			for(size_t i = 0; i < CGarages::Garages().size(); ++i)
 			{
 				auto* garage = static_cast<CCustomGarage*>(CGarages::Garages()[i]);
-				if(garage->gStyle & GARAGE_DONT_SAVE) continue;
+				if (garage->gStyle & GARAGE_DONT_SAVE) {
+					CDebugLog::Trace("\tGarage id=%d. GARAGE_DONT_SAVE", i);
+					continue;
+				}
 
 				fwrite(static_cast<SaveFileStruct::GarageData*>(garage),
 					sizeof(SaveFileStruct::GarageData), 1, f);
-				if(int count = garage->CountNumCarsInThisGarage())
+				const int count = garage->CountNumCarsInThisGarage();
+				CDebugLog::Trace("\tGarage id=%d. CountNumCarsInThisGarage() = %d", i, count);
+				if(count)
 				{
 					fwrite(&garage->cars[0], sizeof(SaveFileStruct::CarData), count, f);
 				}
