@@ -6,11 +6,11 @@
 #include <type_traits>
 #include <cstdint>
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include <cstdio>
 #include <cstdarg>
 #include <math.h>
-#endif
+//#endif
 
 
 //
@@ -212,12 +212,13 @@ class GameVersion
 class CDebugLog
 {
 	private:
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		// Use C stream
 		FILE* stream;
-#else
+/*#else
 		int dummy;
 #endif
+*/
 
 		static CDebugLog x_static_log;
 
