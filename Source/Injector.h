@@ -160,7 +160,7 @@ class GameVersion
 		GameVersion(const GameVersion& v)
 		{ *this = v; }
 
-		bool IsUnknown()	{ return m_Version == this->UNKNOWN; }
+		bool IsUnknown()	{ return m_Version == eVersion::UNKNOWN; }
 		game_t Game()		{ return m_Game; }
 		eVersion Version()	{ return m_Version; }
 
@@ -182,27 +182,28 @@ class GameVersion
 			switch(ReadMemoryNow<uint8_t>(0x400088, true))
 			{
 				case 0x8A:
-					return m_Version = this->SA_10EU, *this;
+					m_Version = eVersion::SA_10EU; break;
 				case 0xCA:
-					return m_Version = this->SA_10US, *this;
+					m_Version = eVersion::SA_10US; break;
 				case 0xD0:
-					return m_Version = this->SA_101EU, *this;
+					m_Version = eVersion::SA_101EU; break;
 				default:
-					return m_Version = this->UNKNOWN, *this;
+					m_Version = eVersion::UNKNOWN; break;
 			}
+			return *this;
 		}
 
 		const char* GetString()
 		{
 			switch(this->m_Version)
 			{
-				case this->SA_10US:
+			case eVersion::SA_10US:
 					return "GTA_SA 1.0 US";
-				case this->SA_10EU:
+			case eVersion::SA_10EU:
 					return "GTA_SA 1.0 EU";
-				case this->SA_101EU:
+			case eVersion::SA_101EU:
 					return "GTA_SA 1.01 EU";
-				default:
+			default:
 					return "UNKNOWN";
 			}
 		}
@@ -232,43 +233,101 @@ class CDebugLog
 
 		void Print(const char* format, va_list va)
 		{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			if(this->stream)
 			{
 				vfprintf(this->stream, format, va);
 				fputs("\n", this->stream);
 				fflush(this->stream);
 			}
-#endif
+//#endif
 		}
 		
 		void Print(const char* format, ...)
 		{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			if(this->stream)
 			{
 				va_list va; va_start(va, format);
 				this->Print(format, va);
 				va_end(va);
 			}
-#endif
+//#endif
 		}
 
 		CDebugLog(const char* name = nullptr)
 		{
-#ifdef _DEBUG
+//W#ifdef _DEBUG
 			if(name == nullptr) name = "grgx.log";
 			this->stream = fopen(name, "w");
 			this->Print("Log started\n Compiled date and time %s @ %s\n with compiler _MSC_VER = %d", __DATE__, __TIME__, _MSC_VER);
+#ifdef UNICODE
+			this->Print("Using UNICODE encoding.");
+#else
+			this->Print("UNICODE encoding is NOT used.");
 #endif
+			//See: https://msdn.microsoft.com/de-de/library/b0084kay.aspx
+#ifdef _CHAR_UNSIGNED
+			this->Print("_CHAR_UNSIGNED");
+#endif 
+#ifdef __CLR_VER
+			this->Print("__CLR_VER");
+#endif 
+#ifdef __cplusplus_cli
+			this->Print("__cplusplus_cli");
+#endif 
+#ifdef __cplusplus_winrt
+			this->Print("__cplusplus_winrt");
+#endif 
+#ifdef _CPPRTTI
+			this->Print("_CPPRTTI");
+#endif 
+#ifdef _DEBUG
+			this->Print("_DEBUG");
+#endif 
+#ifdef _DLL
+			this->Print("_DLL");
+#endif 
+#ifdef _MSC_BUILD
+			this->Print("_MSC_BUILD %d", _MSC_BUILD);
+#endif 
+#ifdef _MSVC_LANG
+			this->Print("_MSVC_LANG %d", _MSVC_LANG);
+#endif 
+#ifdef __MSVC_RUNTIME_CHECKS
+			this->Print("__MSVC_RUNTIME_CHECKS");
+#endif 
+#ifdef _NATIVE_WCHAR_T_DEFINED
+			this->Print("_NATIVE_WCHAR_T_DEFINED");
+#endif 
+#ifdef _WCHAR_T_DEFINED
+			this->Print("_WCHAR_T_DEFINED");
+#endif 
+#ifdef _WIN32
+			this->Print("_WIN32");
+#endif 
+#ifdef _WIN64
+			this->Print("_WIN64");
+#endif 
+#ifdef _WINRT_DLL
+			this->Print("_WINRT_DLL");
+#endif 
+#ifdef _ATL_VER
+			this->Print("_ATL_VER");
+#endif 
+#ifdef _MFC_VER
+			this->Print("_MFC_VER");
+#endif 
+
+//#endif
 		}
 
 		~CDebugLog()
 		{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			this->Print("Log finished");
 			fclose(stream);
-#endif
+//#endif
 		}
 };
 
