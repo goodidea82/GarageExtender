@@ -6,11 +6,12 @@
 #include <type_traits>
 #include <cstdint>
 
-//#ifdef _DEBUG
+#define LOGGING
+#ifdef LOGGING
 #include <cstdio>
 #include <cstdarg>
 #include <math.h>
-//#endif
+#endif
 
 
 //
@@ -212,20 +213,20 @@ class GameVersion
 class CDebugLog
 {
 	private:
-//#ifdef _DEBUG
+#ifdef LOGGING
 		// Use C stream
 		FILE* stream;
-/*#else
+#else
 		int dummy;
 #endif
-*/
+
 
 		static CDebugLog x_static_log;
 
 	public:
 		static void Trace(const char* format, ...)
 		{
-#ifdef _DEBUG
+#ifdef LOGGING
 			va_list va; va_start(va, format);
 			x_static_log.Print(format, va);
 			va_end(va);
@@ -234,31 +235,31 @@ class CDebugLog
 
 		void Print(const char* format, va_list va)
 		{
-//#ifdef _DEBUG
+#ifdef LOGGING
 			if(this->stream)
 			{
 				vfprintf(this->stream, format, va);
 				fputs("\n", this->stream);
 				fflush(this->stream);
 			}
-//#endif
+#endif
 		}
 		
 		void Print(const char* format, ...)
 		{
-//#ifdef _DEBUG
+#ifdef LOGGING
 			if(this->stream)
 			{
 				va_list va; va_start(va, format);
 				this->Print(format, va);
 				va_end(va);
 			}
-//#endif
+#endif
 		}
 
 		CDebugLog(const char* name = nullptr)
 		{
-//W#ifdef _DEBUG
+#ifdef LOGGING
 			if(name == nullptr) name = "grgx.log";
 			this->stream = fopen(name, "w");
 			this->Print("Log started\n Compiled date and time %s @ %s\n with compiler _MSC_VER = %d", __DATE__, __TIME__, _MSC_VER);
@@ -320,15 +321,15 @@ class CDebugLog
 			this->Print("_MFC_VER");
 #endif 
 
-//#endif
+#endif
 		}
 
 		~CDebugLog()
 		{
-//#ifdef _DEBUG
+#ifdef LOGGING
 			this->Print("Log finished");
 			fclose(stream);
-//#endif
+#endif
 		}
 };
 
