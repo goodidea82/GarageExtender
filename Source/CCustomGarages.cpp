@@ -372,6 +372,18 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		fclose(f);
 	}
 
+	CDebugLog::Trace("List of garages:");
+	for (CGarageBase* gp : Garages()) {
+		//CDebugLog::Trace("\t %s", gp->Name);
+		CDebugLog::Trace("\tGarage=%s %s Type=%d Pos=(%4.2f, %4.2f, %4.2f) "
+					"DirA=(%4.2f, %4.2f), DirB=(%4.2f, %4.2f)",
+					gp->Name, (gp->IsGRGX()? "GRGX": "ORIG"), gp->Type, gp->Position.x, gp->Position.y, gp->Position.z, 
+					gp->DirectionA.x, gp->DirectionA.y, gp->DirectionB.x, gp->DirectionB.y);
+		CDebugLog::Trace("\t\tLeft=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f\n",
+					gp->Left, gp->Right, gp->Front, gp->Back, gp->TopZ);
+	}
+
+
 	CFileMgr::ChangeDir("");
 }
 

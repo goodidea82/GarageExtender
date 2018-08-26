@@ -851,7 +851,7 @@ inline float GetDistanceBetweenPoints2D(const RwV3D& p1, const RwV3D& p2)
 
 inline void DebugMessage(const char* format, ...)
 {
-#ifdef _DEBUG
+#ifdef LOGGING
 	static char PrintBuffer[512] = {0};
 	va_list v; va_start(v, format);
 	vsprintf(PrintBuffer, format, v);
@@ -862,7 +862,7 @@ inline void DebugMessage(const char* format, ...)
 
 inline bool DebugCheat(const char* cheat)
 {
-#ifdef _DEBUG
+#ifdef LOGGING
 	char* cheat_string = (char*)(0x969110);
 	size_t l = strlen(cheat);
 	if(l-- == 0) return false;

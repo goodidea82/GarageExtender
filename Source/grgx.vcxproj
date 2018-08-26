@@ -42,14 +42,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..</OutDir>
+    <OutDir>C:\Games\GTA_SA\GTA San Andreas\</OutDir>
     <TargetName>grgx</TargetName>
     <TargetExt>.asi</TargetExt>
     <IncludePath>Game Structs\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..</OutDir>
+    <OutDir>C:\Games\GTA_SA\GTA San Andreas\</OutDir>
     <TargetName>grgx</TargetName>
     <TargetExt>.asi</TargetExt>
     <IncludePath>Game Structs\;$(IncludePath)</IncludePath>
