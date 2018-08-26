@@ -94,7 +94,8 @@ CCustomGarage* CGarages::AddOneX(float x1, float y1, float z1, float frontX, flo
 
 		width = sqrt( (g->DirectionA.y*g->DirectionA.y) + (g->DirectionA.x*g->DirectionA.x) );
 		depth = sqrt( (g->DirectionB.y*g->DirectionB.y) + (g->DirectionB.x*g->DirectionB.x) );
-		
+		const float height = top - z1;
+
 		g->Width = width;
 		g->Depth = depth;
 
@@ -103,6 +104,7 @@ CCustomGarage* CGarages::AddOneX(float x1, float y1, float z1, float frontX, flo
 		g->DirectionB.x /= depth;
 		g->DirectionB.y /= depth;
 
+		float dotProduct = g->DirectionA.x * g->DirectionB.x + g->DirectionA.y * g->DirectionB.y;
 		g->Flags = 0;
 		//if(flags & FLAG_IPL_DOOR_GOES_UP_AND_ROTATE)	g->Flags |= FLAG_GARAGE_DOOR_OPENS_UP_AND_ROTATE;
 		//if(flags & FLAG_IPL_DOOR_GOES_IN)				g->Flags |= FLAG_GARAGE_DOOR_GOES_IN;
@@ -117,11 +119,13 @@ CCustomGarage* CGarages::AddOneX(float x1, float y1, float z1, float frontX, flo
 			"\t\tName: %s\n"
 			"\t\tCan store vehicle: %s\n"
 			"\t\tIs Parking Garage: %s\n"
-			"\t\tIs g->gStyle & GARAGE_DONT_SAVE: %s\n",
+			"\t\tIs GARAGE_DONT_SAVE: %s\n"
+			"\t\tWidth=%4.1f, Depth=%4.1f, Height=%4.1f,  dotProduct(dirA, dirB)=%4.2f",
 				g->Name,
 				g->DoesThisGarageCanStoreVehicles() ? "true" : "false",
 				g->IsParkingGarage() ? "true" : "false",
-				(g->gStyle & GARAGE_DONT_SAVE)? "true" : "false");
+				(g->gStyle & GARAGE_DONT_SAVE)? "true" : "false",
+				g->Width, g->Depth, height, dotProduct);
 
 		return g;
 	}
@@ -861,13 +865,24 @@ char CCustomGarage::RestoreCarsForThisGarage(CStoredCar*)
 
 void CCustomGarage::StoreAndRemoveCarsForThisGarage(CStoredCar*, signed int)
 {
+	CDebugLog::Trace("CCustomGarage::StoreAndRemoveCarsForThisGarage(...)");
+
 	if(this->size == 0) return;
 	this->ClearStoredCars();
 
 	size_t nStored = 0;
 	CPools::VehiclePool->for_each([this, &nStored](CVehicle* pVehicle)
 	{
-		if( this->IsPointWithinGarage(GetCoords(&pVehicle->__parent.__parent)) )
+		const RwV3D vehicleCoords = GetCoords(&pVehicle->__parent.__parent);
+		bool pointInGarage = this->IsPointWithinGarage(vehicleCoords);
+		CDebugLog::Trace("\tGarage=%s. Car (%4.2f, %4.2f, %4.2f) Left=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f, pointInGarage=%d", 
+			this->Name, vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, this->Left, this->Right, this->Front, this->Back, this->TopZ, pointInGarage);
+		if (this->Left <= vehicleCoords.x && vehicleCoords.x <= this->Right &&
+			this->Front <= vehicleCoords.y && vehicleCoords.y <= this->Back &&
+			vehicleCoords.z <= this->TopZ) {
+			CDebugLog::Trace("\tIS INSIDE");
+		}
+		if( pointInGarage )
 		{
 			// not a script vehicle and not garage full
 			if(pVehicle->VehicleCreatedBy != 2)
