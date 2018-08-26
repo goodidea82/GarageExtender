@@ -324,7 +324,7 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 							|| garage->Position.y != garage_data.Position.y
 							|| garage->Position.z != garage_data.Position.z) 
 						{
-							CDebugLog::Trace("\tWARNING Garage definition not found that corresponds to the save file!");
+							CDebugLog::Trace("\tWARNING Garage (%s) definition not found that corresponds to the save file! Possible reasons: Wrong versions of grgx vs. save file; definition of garage coordinates changed; other reasons.", grg.name);
 							continue;
 						}
 							
@@ -372,7 +372,8 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		fclose(f);
 	}
 
-
+/* 
+//This was used for debugging here: https://gtaforums.com/topic/536465-garage-extender/?do=findComment&comment=1070405503
 	CDebugLog::Trace("List of ORIGINAL garages:");
 	for (int i = 0, max = CGarages__NumGarages; i < max; ++i)
 	{
@@ -390,14 +391,14 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		point.y = (gp->Front + gp->Back) / 2.0;
 		point.z = (gp->Position.z + gp->TopZ) / 2.0;
 		bool pointInGarage = CGarage__IsPointWithinGarage(gp, 0, point);
-		CDebugLog::Trace("\t\tTest point 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
+		CDebugLog::Trace("\t\tTest testPoint 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
 			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
 
 		point.x = (gp->Position.x + gp->DirectionA.x + gp->DirectionB.x);
 		point.y = (gp->Position.y + gp->DirectionA.y + gp->DirectionB.y);
 		point.z = (gp->Position.z + gp->TopZ) / 2.0;
 		pointInGarage = CGarage__IsPointWithinGarage(gp, 0, point);
-		CDebugLog::Trace("\t\tTest point 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
+		CDebugLog::Trace("\t\tTest testPoint 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
 			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
 	}
 
@@ -416,16 +417,17 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		point.y = (gp->Front + gp->Back) / 2.0;
 		point.z = (gp->Position.z + gp->TopZ) / 2.0;
 		bool pointInGarage = gp->IsPointWithinGarage(point);
-		CDebugLog::Trace("\t\tTest point 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
+		CDebugLog::Trace("\t\tTest testPoint 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
 			point.x, point.y, point.z, (pointInGarage?"TRUE":"FALSE") );
 
 		point.x = (gp->Position.x + gp->DirectionA.x + gp->DirectionB.x);
 		point.y = (gp->Position.y + gp->DirectionA.y + gp->DirectionB.y);
 		point.z = (gp->Position.z + gp->TopZ) / 2.0;
 		pointInGarage = gp->IsPointWithinGarage(point);
-		CDebugLog::Trace("\t\tTest point 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
+		CDebugLog::Trace("\t\tTest testPoint 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
 			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
 	}
+*/
 
 
 	CFileMgr::ChangeDir("");
@@ -505,7 +507,7 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 			{
 				auto* garage = static_cast<CCustomGarage*>(CGarages::Garages()[i]);
 				if (garage->gStyle & GARAGE_DONT_SAVE) {
-					CDebugLog::Trace("\tGarage id=%d. GARAGE_DONT_SAVE", i);
+					CDebugLog::Trace("\tGarage = %s. GARAGE_DONT_SAVE", garage->Name);
 					continue;
 				}
 
@@ -513,7 +515,7 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 					sizeof(SaveFileStruct::GarageData), 1, f);
 				const int count = garage->CountNumCarsInThisGarage();
 				const bool canStore = garage->DoesThisGarageCanStoreVehicles();
-				CDebugLog::Trace("\tGarage id=%d. CanStoreVehicle = %s, CountNumCarsInThisGarage() = %d", i, (canStore?"true":"false"), count);
+				CDebugLog::Trace("\tGarage = %s. CanStoreVehicle = %s, CountNumCarsInThisGarage() = %d", garage->Name, (canStore?"true":"false"), count);
 				if(count)
 				{
 					fwrite(&garage->cars[0], sizeof(SaveFileStruct::CarData), count, f);
@@ -931,12 +933,39 @@ void CCustomGarage::StoreAndRemoveCarsForThisGarage(CStoredCar*, signed int)
 	{
 		const RwV3D vehicleCoords = GetCoords(&pVehicle->__parent.__parent);
 		bool pointInGarage = this->IsPointWithinGarage(vehicleCoords);
-		CDebugLog::Trace("\tGarage=%s. Car (%4.2f, %4.2f, %4.2f) Left=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f, pointInGarage=%d", 
-			this->Name, vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, this->Left, this->Right, this->Front, this->Back, this->TopZ, pointInGarage);
 		if (this->Left <= vehicleCoords.x && vehicleCoords.x <= this->Right &&
 			this->Front <= vehicleCoords.y && vehicleCoords.y <= this->Back &&
-			vehicleCoords.z <= this->TopZ) {
-			CDebugLog::Trace("\tIS INSIDE");
+			!pointInGarage
+			) {
+			CDebugLog::Trace("\n\tGarage=%s. Car (%4.2f, %4.2f, %4.2f) Left=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Pos.z=%4.2f, Top=%4.2f, pointInGarage=%d",
+				this->Name, vehicleCoords.x, vehicleCoords.y, vehicleCoords.z, this->Left, this->Right, this->Front, this->Back, this->Position.z, this->TopZ, pointInGarage);
+			CGarageBase* gp = this;
+
+			if (Position.z <= vehicleCoords.z && vehicleCoords.z <= this->TopZ) {
+				CDebugLog::Trace("\twarning: Car is within the bounds Left, Right, Front, Back, Pos.z, TopZ, but IsPointWithinGarage(vehicleCoords)=FALSE");
+			}
+			else {
+				CDebugLog::Trace("\tWARNING: Car.xy is inside the XY-garage bounds Left, Right, Front, Back, but Car.z IS NOT INSIDE Pos.z, TopZ ! Perhaps the garage coordinates must be fixed.");
+			}
+
+			//Test if a test point is recognized in the garage
+			RwV3D testPoint;
+			testPoint.x = (gp->Left + gp->Right) / 2.0;
+			testPoint.y = (gp->Front + gp->Back) / 2.0;
+			testPoint.z = (gp->Position.z + gp->TopZ) / 2.0;
+			if (!gp->IsPointWithinGarage(testPoint)) {
+				CDebugLog::Trace("\t\tERROR: Test testPoint 1 (%4.2f, %4.2f, %4.2f) not in garage = %s",
+					testPoint.x, testPoint.y, testPoint.z, (pointInGarage ? "TRUE" : "FALSE"));
+			}
+
+			testPoint.x = (gp->Position.x + gp->DirectionA.x + gp->DirectionB.x);
+			testPoint.y = (gp->Position.y + gp->DirectionA.y + gp->DirectionB.y);
+			testPoint.z = (gp->Position.z + gp->TopZ) / 2.0;
+			if (!gp->IsPointWithinGarage(testPoint)) {
+				CDebugLog::Trace("\t\tERROR: Test testPoint 2 (%4.2f, %4.2f, %4.2f) not in garage = %s",
+					testPoint.x, testPoint.y, testPoint.z, (pointInGarage ? "TRUE" : "FALSE"));
+			}
+			CDebugLog::Trace("\n");
 		}
 		if( pointInGarage )
 		{
@@ -967,6 +996,10 @@ void CCustomGarage::StoreAndRemoveCarsForThisGarage(CStoredCar*, signed int)
 				&& (this->IsParkingGarage() || !this->IsEntityTouchingOutside(&pVehicle->__parent.__parent, 1.0)) )
 				{
 					CStoredCar__Store(&this->cars[nStored++], 0, pVehicle);
+					CDebugLog::Trace("\t\tStored car %d", nStored);
+				}
+				else {
+					CDebugLog::Trace("\t\tDid NOT store car %d", nStored);
 				}
 				CWorld::Remove(&pVehicle->__parent.__parent);
 				delete_me(pVehicle, 1);
