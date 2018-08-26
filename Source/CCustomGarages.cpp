@@ -372,15 +372,59 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		fclose(f);
 	}
 
-	CDebugLog::Trace("List of garages:");
+
+	CDebugLog::Trace("List of ORIGINAL garages:");
+	for (int i = 0, max = CGarages__NumGarages; i < max; ++i)
+	{
+		auto* gp = &CGarages__Garages[i];
+		CDebugLog::Trace("\tGarage=%s %s Type=%d OrigType=%d Pos=(%4.2f, %4.2f, %4.2f) "
+			"DirA=(%4.2f, %4.2f), DirB=(%4.2f, %4.2f)",
+			gp->Name, "ORIG", gp->Type, gp->OriginalType, gp->Position.x, gp->Position.y, gp->Position.z,
+			gp->DirectionA.x, gp->DirectionA.y, gp->DirectionB.x, gp->DirectionB.y);
+		CDebugLog::Trace("\t\tLeft=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f",
+			gp->Left, gp->Right, gp->Front, gp->Back, gp->TopZ);
+		
+		//Test if a test point is recognized in the garage
+		RwV3D point;
+		point.x = (gp->Left + gp->Right) / 2.0;
+		point.y = (gp->Front + gp->Back) / 2.0;
+		point.z = (gp->Position.z + gp->TopZ) / 2.0;
+		bool pointInGarage = CGarage__IsPointWithinGarage(gp, 0, point);
+		CDebugLog::Trace("\t\tTest point 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
+			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
+
+		point.x = (gp->Position.x + gp->DirectionA.x + gp->DirectionB.x);
+		point.y = (gp->Position.y + gp->DirectionA.y + gp->DirectionB.y);
+		point.z = (gp->Position.z + gp->TopZ) / 2.0;
+		pointInGarage = CGarage__IsPointWithinGarage(gp, 0, point);
+		CDebugLog::Trace("\t\tTest point 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
+			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
+	}
+
+	CDebugLog::Trace("List of CUSTOM garages:");
 	for (CGarageBase* gp : Garages()) {
 		//CDebugLog::Trace("\t %s", gp->Name);
-		CDebugLog::Trace("\tGarage=%s %s Type=%d Pos=(%4.2f, %4.2f, %4.2f) "
+		CDebugLog::Trace("\tGarage=%s %s Type=%d OrigType=%d Pos=(%4.2f, %4.2f, %4.2f) "
 					"DirA=(%4.2f, %4.2f), DirB=(%4.2f, %4.2f)",
-					gp->Name, (gp->IsGRGX()? "GRGX": "ORIG"), gp->Type, gp->Position.x, gp->Position.y, gp->Position.z, 
+					gp->Name, (gp->IsGRGX()? "GRGX": "ORIG"), gp->Type, gp->OriginalType, gp->Position.x, gp->Position.y, gp->Position.z,
 					gp->DirectionA.x, gp->DirectionA.y, gp->DirectionB.x, gp->DirectionB.y);
-		CDebugLog::Trace("\t\tLeft=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f\n",
+		CDebugLog::Trace("\t\tLeft=%4.2f, Right=%4.2f, Front=%4.2f, Back=%4.2f, Top=%4.2f",
 					gp->Left, gp->Right, gp->Front, gp->Back, gp->TopZ);
+		//Test if a test point is recognized in the garage
+		RwV3D point;
+		point.x = (gp->Left + gp->Right) / 2.0;
+		point.y = (gp->Front + gp->Back) / 2.0;
+		point.z = (gp->Position.z + gp->TopZ) / 2.0;
+		bool pointInGarage = gp->IsPointWithinGarage(point);
+		CDebugLog::Trace("\t\tTest point 1 (%4.2f, %4.2f, %4.2f) in garage = %s",
+			point.x, point.y, point.z, (pointInGarage?"TRUE":"FALSE") );
+
+		point.x = (gp->Position.x + gp->DirectionA.x + gp->DirectionB.x);
+		point.y = (gp->Position.y + gp->DirectionA.y + gp->DirectionB.y);
+		point.z = (gp->Position.z + gp->TopZ) / 2.0;
+		pointInGarage = gp->IsPointWithinGarage(point);
+		CDebugLog::Trace("\t\tTest point 2 (%4.2f, %4.2f, %4.2f) in garage = %s\n",
+			point.x, point.y, point.z, (pointInGarage ? "TRUE" : "FALSE"));
 	}
 
 

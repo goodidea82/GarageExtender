@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>C:\Games\GTA_SA\GTA San Andreas\</OutDir>
+    <OutDir>..</OutDir>
     <TargetName>grgx</TargetName>
     <TargetExt>.asi</TargetExt>
     <IncludePath>Game Structs\;$(IncludePath)</IncludePath>
