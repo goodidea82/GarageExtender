@@ -259,6 +259,7 @@ class CDebugLog
 
 		CDebugLog(const char* name = nullptr)
 		{
+			int defValue = 0; // fix for newer versions of VS/CPP (idkw)
 #ifdef LOGGING
 			if(name == nullptr) name = "grgx.log";
 			this->stream = fopen(name, "w");
@@ -291,10 +292,12 @@ class CDebugLog
 			this->Print("_DLL");
 #endif 
 #ifdef _MSC_BUILD
-			this->Print("_MSC_BUILD %d", _MSC_BUILD);
+			defValue = _MSC_BUILD;
+			this->Print("_MSC_BUILD %d", defValue);
 #endif 
 #ifdef _MSVC_LANG
-			this->Print("_MSVC_LANG %d", _MSVC_LANG);
+			defValue = _MSVC_LANG;
+			this->Print("_MSVC_LANG %d", defValue);
 #endif 
 #ifdef __MSVC_RUNTIME_CHECKS
 			this->Print("__MSVC_RUNTIME_CHECKS");
@@ -839,14 +842,14 @@ inline float GetDistanceBetweenPoints3D(const RwV3D& p1, const RwV3D& p2)
 	float dx = p1.x - p2.x;
 	float dy = p1.y - p2.y;
 	float dz = p1.z - p2.z;
-	return sqrt(dx*dx + dy*dy + dz*dz);
+	return sqrtf(dx*dx + dy*dy + dz*dz);
 }
 
 inline float GetDistanceBetweenPoints2D(const RwV3D& p1, const RwV3D& p2)
 {
 	float dx = p1.x - p2.x;
 	float dy = p1.y - p2.y;
-	return sqrt(dx*dx + dy*dy);
+	return sqrtf(dx*dx + dy*dy);
 }
 
 inline void DebugMessage(const char* format, ...)

@@ -14,21 +14,21 @@
     <ProjectGuid>{3792FDBB-61AC-4E27-939F-E342FF8DA705}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>grgx_park</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -42,17 +42,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..</OutDir>
+    <OutDir>G:\GTA San Andreas Remaster\modloader\Parking Save Garages\</OutDir>
     <TargetName>grgx</TargetName>
     <TargetExt>.asi</TargetExt>
     <IncludePath>Game Structs\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..</OutDir>
+    <OutDir>G:\GTA San Andreas Remaster\modloader\Parking Save Garages\</OutDir>
     <TargetName>grgx</TargetName>
     <TargetExt>.asi</TargetExt>
     <IncludePath>Game Structs\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -64,6 +70,8 @@
       <OmitFramePointers>false</OmitFramePointers>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,6 +87,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GRGX_PARK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
