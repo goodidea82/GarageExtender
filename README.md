@@ -13,7 +13,7 @@ GarageExtender for GTA SA developed by Link2012
 
 	 ____________________________________________________________________________
 	/
-	   >>>>>>>>> Nitro On Bikes <<<<<<<<<
+	   >>>>>>>>> Garage eXtender <<<<<<<<<
 
 		This ASI plugin increases the garage limits and add more possibilites into the garage system.
 		If you're a developer, read the documentation for more details!!
