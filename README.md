@@ -62,3 +62,6 @@ v1.0.3 - July 23 2017
 
 v1.0.4 - July 25 2017
     Update goodidea82. A bugfix and improved compatibility
+
+v1.0.5 - July 17 2021
+    Update Junior_Djjr. Fixed PortableGTA + ModLoader incompatibility; removed msvcp140.dll dependency; minor fixes.
