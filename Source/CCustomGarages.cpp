@@ -14,6 +14,8 @@
 #pragma warning(disable : 4305)
 #include "CCustomGarages.h"
 #include <cmath>
+#include <string>
+#include <algorithm>
 #include "CAutomobile.h"
 #include "CMatrix_Padded.h"	// Same as RwMatrix
 std::vector<CGarageBase*> CGarages::garages;
@@ -232,7 +234,14 @@ void CreateSaveDirectory()
 {
 	if(CreateDirectoryA("grgx", nullptr))
 	{
-		if(FILE* f = fopen("grgx\\what_is_this.txt", "w"))
+		char buffer[MAX_PATH] = { 0 };
+		GetCurrentDirectoryA(sizeof(buffer), buffer);
+		std::string name;
+		name.reserve(1024);
+		name += buffer;
+		name += "/grgx/what_is_this.txt";
+
+		if(FILE* f = fopen(name.c_str(), "w"))
 		{
 			fputs("This directory stores garages for the mod GRGX (Garage eXtender)\n"
 				  "Delete only if you've unistalled this mod\n",
@@ -248,10 +257,17 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 	if(info.slot == -1) return;
 	CFileMgr::ChangeToUserDir();
 	CreateSaveDirectory();
-	
-	char Buffer[128];
-	sprintf(Buffer, "grgx\\%d.sav", info.slot + 1);
-	if(FILE* f = fopen(Buffer, "rb"))
+
+	char buffer[MAX_PATH] = { 0 };
+	GetCurrentDirectoryA(sizeof(buffer), buffer);
+	std::string name;
+	name.reserve(1024);
+	name += buffer;
+	name += "/grgx/" + std::to_string(info.slot + 1) + ".sav";
+
+	CDebugLog::Trace(name.c_str());
+
+	if(FILE* f = fopen(name.c_str(), "rb"))
 	{
 		// No exception handling system!!!! (neither C++ streams)
 		// a do...while can handle this.
@@ -368,7 +384,7 @@ void CGarages::OnLoad(const CSaveSystem::SaveInfo& info)
 		}
 		while(false);
 
-		if(!Done) CDebugLog::Trace("Corrupt save file: %s\n", Buffer);
+		if(!Done) CDebugLog::Trace("Corrupt save file: %s\n", name.c_str());
 		fclose(f);
 	}
 
@@ -439,9 +455,16 @@ void CGarages::OnSave(const CSaveSystem::SaveInfo& info)
 	CFileMgr::ChangeToUserDir();
 	CreateSaveDirectory();
 
-	char Buffer[128];
-	sprintf(Buffer, "grgx\\%d.sav", info.slot + 1);
-	if(FILE* f = fopen(Buffer, "wb"))
+	char buffer[MAX_PATH] = { 0 };
+	GetCurrentDirectoryA(sizeof(buffer), buffer);
+	std::string name;
+	name.reserve(1024);
+	name += buffer;
+	name += "\\grgx\\" + std::to_string(info.slot + 1) + ".sav";
+
+	CDebugLog::Trace(name.c_str());
+
+	if(FILE* f = fopen(name.c_str(), "wb"))
 	{
 		size_t num_garages = 0;
 		size_t next_data_block;
